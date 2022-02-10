@@ -12,7 +12,7 @@ export class AdminService {
   constructor(private http:HttpClient) { }
 
   savePost(post:savePostReq){
-    return this.http.post(this.url+`/postss`,post);
+    return this.http.post(this.url+`/posts`,post);
   }
 
 }
