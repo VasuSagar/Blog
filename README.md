@@ -4,7 +4,7 @@ Frontend server for [BlogAPI](https://github.com/VasuSagar/BlogAPI)
 # Intro #
 A Blog API with functionalities listed below
 - [x] Create Post(blog),add comment,Login & Register
-- [ ] Like blog functionality
+- [x] Like blog functionality
 - [x] Have pagination support on scrollDown for Blogs
 - [x] Global error handling
 - [x] Notification service
