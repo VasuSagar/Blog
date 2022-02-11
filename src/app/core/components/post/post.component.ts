@@ -1,8 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { timeout } from 'rxjs/operators';
 import { Comment } from '../../models/comment';
 import { Post } from '../../models/post';
 import { CommentService } from '../../services/comment.service';
+import { LikeService } from '../../services/like.service';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: 'app-post',
@@ -14,8 +16,10 @@ export class PostComponent implements OnInit {
   comments:Comment[];
   newCommentBody:string;
   loaderShow=false;
-  
-  constructor(private commentService:CommentService) { }
+  showLikesNames=false;
+  @ViewChild('commentInput', {static: false}) commentInput: ElementRef;
+
+  constructor(private commentService:CommentService,private likeService:LikeService,private tokenService:TokenService) { }
 
   ngOnInit(): void {
     this.comments=this.post.comments;
@@ -35,6 +39,39 @@ export class PostComponent implements OnInit {
     setTimeout(()=>{
       this.loaderShow=false;
     },4000);
+  }
+
+  onCommentButtonClicked(){
+    this.commentInput.nativeElement.focus();
+  }
+
+  showLikes(){
+    this.showLikesNames=true;
+  }
+
+  hideLikes(){
+    this.showLikesNames=false;
+  }
+
+  setLikeDisLike(){
+    this.likeService.setLikeOrDislike(this.post.id).subscribe(data=>{
+      console.log(data);
+      if(data.id!=null){
+        //liked post
+        this.post.likes.push(data);
+
+        this.post.isLikedByMe=true;
+        this.post.likesCount++;
+      }
+      else{
+        //disliked
+        const index=this.post.likes.findIndex(like=>like.userId==this.tokenService.getId());
+        this.post.likes.splice(index,1)
+        
+        this.post.isLikedByMe=false;
+        this.post.likesCount--;
+      }
+    });
   }
 
 }

@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
   onSubmit(){
     this.userService.login(this.loginForm.value).subscribe(data=>{
       this.tokenService.saveToken(data.token);
+      this.tokenService.saveId(data.id);
       this.notifierService.notify('success',"Logged In successfully");
       this.router.navigate(['']);
     });

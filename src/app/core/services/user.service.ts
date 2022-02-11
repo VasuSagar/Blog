@@ -15,8 +15,8 @@ export class UserService {
     return this.http.get<PostPagingResponse>(this.url+`/posts`,{params});
   }
 
-  login(loginReq:{email:string,password:string}):Observable<{token:string,email:string}>{
-    return this.http.post<{token:string,email:string}>(this.url+`/auth/login`,loginReq);
+  login(loginReq:{email:string,password:string}):Observable<{token:string,email:string,id:number}>{
+    return this.http.post<{token:string,email:string,id:number}>(this.url+`/auth/login`,loginReq);
   }
 
   signup(signupReq:{email:string,password:string,name:string}):Observable<string>{

@@ -2,6 +2,7 @@
     <div *ngFor="let post of posts">
         <app-post [post]="post">
         </app-post>
+        <br>
     </div>
     <div class="d-flex justify-content-center align-items-center">
         <div class="spinner-border text-primary" role="status" *ngIf="loaderShow">

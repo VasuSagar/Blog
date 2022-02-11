@@ -16,6 +16,14 @@ export class TokenService {
     return sessionStorage.getItem("token");
   }
 
+  public saveId(id:number){
+    window.sessionStorage.setItem('id',id.toString());
+  }
+
+  public getId(){
+   return parseInt(window.sessionStorage.getItem('id'));
+  }
+
   signOut() {
     window.sessionStorage.clear();
   }

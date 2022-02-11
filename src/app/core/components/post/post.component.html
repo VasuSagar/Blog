@@ -6,8 +6,7 @@
           <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
         </div>
         <div class="ml-2">
-          <div class="h5 m-0">@LeeCross</div>
-          <div class="h7 text-muted">Miracles Lee Cross</div>
+          <div class="h5 m-0">{{post.userName}}</div>
         </div>
       </div>
     </div>
@@ -17,14 +16,20 @@
     <div>
       <h5 class="card-title">{{post.title}}</h5>
     </div>
-
+    <div>
     <p class="card-text">
       {{post.content}}
     </p>
   </div>
   <div class="card-footer">
-    <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>
-    <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
+
+    <a class="card-link" (click)="setLikeDisLike()" (mouseover)="showLikes()" (mouseout)="hideLikes()"><i [ngClass]="post.isLikedByMe == true ? 'fa fa-thumbs-down' : 'fa fa-thumbs-up'"></i>{{post.likesCount}}</a>
+    <a class="card-link" (click)="onCommentButtonClicked()"><i class="fa fa-comment"></i> Comment</a>
+  </div>
+  <div *ngIf="showLikesNames">
+    <span *ngFor="let like of post.likes">
+      {{like.userName}}
+    </span>
   </div>
   <br>
   <div class="mb-3">
@@ -34,7 +39,7 @@
       </div>
     </div>
     <input type="text" class="form-control" placeholder="Enter comment jo karvi hoy to" [(ngModel)]="newCommentBody"
-      (keyup.enter)="onCommentEntered()">
+      (keyup.enter)="onCommentEntered()" #commentInput>
   </div>
   <app-comment *ngFor="let comment of comments" [comment]="comment">
   </app-comment>

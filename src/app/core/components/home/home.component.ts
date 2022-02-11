@@ -2,6 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Post } from '../../models/post';
 import { PostPagingResponse } from '../../models/postPagingResponse';
+import { TokenService } from '../../services/token.service';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -16,7 +17,7 @@ export class HomeComponent implements OnInit {
   pageNo = 0;
   pageSize = 10;
   isLastResponse = false;
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private tokenService: TokenService) { }
 
   ngOnInit(): void {
     this.getBlogs();
@@ -35,15 +36,29 @@ export class HomeComponent implements OnInit {
       params = params.append('pageSize', this.pageSize.toString());
       this.userService.getAllBlogs(params).subscribe((res: PostPagingResponse) => {
         this.postPagingResponse = res;
+        const loggedInUserId = this.tokenService.getId();
 
-        //better approach will be to send sorted from API itself
-        this.postPagingResponse.posts.forEach(post=>{
-          post.comments.sort((a,b)=>a.id-b.id);
+        this.postPagingResponse.posts.forEach(post => {
+          post.isLikedByMe=false;
+          //check if post is liked by loggedInUser
+          if (loggedInUserId != null) {
+            //user is logged in
+
+            //find through likes array if userid exists
+            post.likes.forEach(like => {
+              if (like.userId == loggedInUserId) {
+                post.isLikedByMe = true;
+              }
+            });
+
+          }
+          //better approach will be to send sorted from API itself
+          post.comments.sort((a, b) => a.id - b.id);
         });
-        
+
         this.posts.push(...this.postPagingResponse.posts);
         console.log(this.posts);
-        
+
         this.pageNo++;
         this.isLastResponse = res.last;
         this.loaderShow = false;
